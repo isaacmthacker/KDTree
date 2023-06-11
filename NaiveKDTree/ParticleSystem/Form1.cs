@@ -37,7 +37,7 @@ namespace ParticleSystem
         {
             DoubleBuffered = true;
             InitializeComponent();
-            particleSystem.CreateParticles(50, ClientSize.Width, ClientSize.Height);
+            particleSystem.CreateParticles(10, ClientSize.Width, ClientSize.Height);
             TimerRunner timerRunner = new TimerRunner(this);
             timerThread = new Thread(new ThreadStart(timerRunner.Run));
             timerThread.Start();
