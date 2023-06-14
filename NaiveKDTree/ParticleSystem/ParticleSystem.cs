@@ -119,36 +119,111 @@ namespace ParticleSystem
                             {
                                 if (iParticle.Intersect(jParticle))
                                 {
-                                    //todo: Handle more than 1 particle intersection
+                                    float x1 = iParticle.x;
+                                    float y1 = iParticle.y;
+                                    float x2 = jParticle.x;
+                                    float y2 = jParticle.y;
 
-                                    float tmpx = iParticle.vel_x;
-                                    float tmpy = iParticle.vel_y;
-                                    iParticle.vel_x = jParticle.vel_x;
-                                    iParticle.vel_y = jParticle.vel_y;
-                                    jParticle.vel_x = tmpx;
-                                    jParticle.vel_y = tmpy;
+                                    double dist = Math.Sqrt((y2 - y1) * (y2 - y1) + (x2 - x1) * (x2 - x1));
 
+                                    double height = Math.Abs(y2 - y1);
+                                    double width = Math.Abs(x2 - x1);   //needed at all?
+                                    double asin = Math.Asin(height / dist);
+
+
+                                    double theta_P1, theta_P2;
+
+                                    if (y2 > y1 && x2 > x1)
+                                    {
+                                        //Console.WriteLine("case 1");
+                                        theta_P1 = asin;
+                                        theta_P2 = Math.PI + asin;
+                                    }
+                                    else if (y2 < y1 && x2 < x1)
+                                    {
+                                        //Console.WriteLine("case 2");
+                                        theta_P1 = Math.PI + asin;
+                                        theta_P2 = asin;
+                                    }
+                                    else if (y2 < y1 && x2 > x1)
+                                    {
+                                        //Console.WriteLine("case 3");
+                                        theta_P1 = -1 * asin;
+                                        theta_P2 = Math.PI + -1 * asin;
+                                    }
+                                    else if (y2 > y1 && x2 < x1)
+                                    {
+                                        //Console.WriteLine("case 4");
+                                        theta_P1 = Math.PI + -1 * asin;
+                                        theta_P2 = -1 * asin;
+                                    }
+                                    else if (x1 == x2)
+                                    {
+                                        //Console.WriteLine("case 5");
+                                        if (y1 < y2)
+                                        {
+                                            //Console.WriteLine("case 5a");
+                                            theta_P1 = Math.PI + -1 * asin;
+                                            theta_P2 = -1 * asin;
+                                        }
+                                        else
+                                        {
+                                            //Console.WriteLine("case 5b");
+                                            theta_P1 = -1 * asin;
+                                            theta_P2 = Math.PI + -1 * asin;
+                                        }
+                                    }
+                                    else if (y1 == y2)
+                                    {
+                                        //Console.WriteLine("case 6");
+                                        if (x1 < x2)
+                                        {
+                                            //Console.WriteLine("case 6a");
+                                            theta_P1 = 0;
+                                            theta_P2 = Math.PI;
+                                        }
+                                        else
+                                        {
+                                            //Console.WriteLine("case 6b");
+                                            theta_P1 = Math.PI;
+                                            theta_P2 = 0;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        //Console.WriteLine("todo - what to do here? Anything?");
+                                        theta_P1 = 0;
+                                        theta_P2 = 0;
+                                    }
                                     processed.Add(iParticle);
                                     processed.Add(jParticle);
 
-                                    iParticle.color = Brushes.Green;
-                                    jParticle.color = Brushes.Green;
+                                    double i_velAngle = theta_P1 + Math.PI;
+                                    //double mag = Math.Sqrt(iParticle.vel_x*iParticle.vel_x + iParticle.vel_y*iParticle.vel_y);
 
-                                    Console.WriteLine(
-                                        "(" + iParticle.x.ToString() + "," + iParticle.y.ToString() + ") <" +
-                                        iParticle.vel_x.ToString() + "," + iParticle.vel_y.ToString() + "> " +
-                                        "(" + jParticle.x.ToString() + "," + jParticle.y.ToString() + ") <" +
-                                        iParticle.vel_x.ToString() + "," + iParticle.vel_y.ToString() + ">");
+                                    double mag = iParticle.initMag;
 
-                                    Console.WriteLine("Next: " +
-                        "(" + iParticle.x.ToString() + "," + iParticle.y.ToString() + ") " +
-                        "(" + jParticle.x.ToString() + "," + jParticle.y.ToString() + ")");
+                                    double newvelx = mag*Math.Cos(i_velAngle);
+                                    double newvely = mag*Math.Sin(i_velAngle);
+                                    iParticle.vel_x = (float)newvelx;
+                                    iParticle.vel_y = (float)newvely;
+
+
+                                    double j_velAngle = theta_P2 + Math.PI;
+                                    //mag = Math.Sqrt(iParticle.vel_x * iParticle.vel_x + iParticle.vel_y * iParticle.vel_y);
+                                    mag = jParticle.initMag;
+
+                                    newvelx = mag * Math.Cos(j_velAngle);
+                                    newvely = mag * Math.Sin(j_velAngle);
+                                    jParticle.vel_x = (float)newvelx;
+                                    jParticle.vel_y = (float)newvely;
+
+
 
                                 }
                                 if (i == 0)
                                 {
-                                    Console.WriteLine(string.Format("{0} {1}",
-                                        iParticle.vel_x, iParticle.vel_y));
+                                    //Console.WriteLine(string.Format("{0} {1}", iParticle.vel_x, iParticle.vel_y));
                                     iParticle.color = Brushes.Purple;
                                 }
                             }

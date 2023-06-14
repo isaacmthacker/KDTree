@@ -19,6 +19,7 @@ namespace ParticleSystem
         public float radius;
         public int windowWidth, windowHeight;
         public Brush color = Brushes.Red;
+        public double initMag = 0.0;
         public Particle(float x, float y, float vel_x, float vel_y, float diameter, int windowWidth, int windowHeight)
         {
             this.x = x;
@@ -29,6 +30,7 @@ namespace ParticleSystem
             this.radius = diameter / 2.0f;
             this.windowWidth = windowWidth;
             this.windowHeight = windowHeight;
+            this.initMag = Math.Sqrt(this.vel_x * this.vel_x + this.vel_y * this.vel_y);
 
         }
         public void Draw(Graphics g)
@@ -71,7 +73,7 @@ namespace ParticleSystem
 
             if (ret)
             {
-                Console.WriteLine("Intersect: " + x.ToString() + "," + y.ToString() + " " + other.x.ToString() + "," + other.y.ToString());
+                //Console.WriteLine("Intersect: " + x.ToString() + "," + y.ToString() + " " + other.x.ToString() + "," + other.y.ToString());
                 return true;
             }
             return ret;
